@@ -11,12 +11,7 @@ class BlogsController < ApplicationController
   end
 
   def show
-    @blog = Blog.find(params[:id])
-    if @blog.secret
-      raise ActiveRecord::RecordNotFound unless current_user == @blog.user
-    else
-      @blog
-    end
+    @blog = Blog.accessible(current_user).find(params[:id])
   end
 
   def new
@@ -62,6 +57,6 @@ class BlogsController < ApplicationController
   end
 
   def authorize_user
-    raise ActiveRecord::RecordNotFound unless current_user == @blog.user
+    @blog = current_user.blogs.find(params[:id])
   end
 end
